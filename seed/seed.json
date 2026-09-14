@@ -63,6 +63,77 @@
 					"searchable": true
 				}
 			]
+		},
+		{
+			"slug": "events",
+			"label": "Events",
+			"labelSingular": "Event",
+			"supports": ["drafts", "revisions", "search"],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "term",
+					"label": "Date / Time",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "status_label",
+					"label": "Status Label",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "status_kind",
+					"label": "Status Kind (open, closed, or upcoming)",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "location",
+					"label": "Location",
+					"type": "string"
+				},
+				{
+					"slug": "body",
+					"label": "Summary (HTML, shown on cards)",
+					"type": "text",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "detail",
+					"label": "Details (HTML, shown on event page)",
+					"type": "text"
+				},
+				{
+					"slug": "image",
+					"label": "Image Path",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "alt",
+					"label": "Image Alt Text",
+					"type": "string"
+				},
+				{
+					"slug": "featured",
+					"label": "Featured on Homepage",
+					"type": "boolean"
+				},
+				{
+					"slug": "register_url",
+					"label": "Registration URL",
+					"type": "url"
+				}
+			]
 		}
 	],
 	"taxonomies": [
@@ -931,6 +1002,78 @@
 							"_key": "k0"
 						}
 					]
+				}
+			}
+		]
+,
+		"events": [
+			{
+				"id": "event-1",
+				"slug": "john-cominsky-youth-football-camp",
+				"status": "published",
+				"data": {
+					"title": "John Cominsky Youth Football Camp",
+					"term": "June 26, 2026 \u00b7 6:45-9:15 PM",
+					"status_label": "Open",
+					"status_kind": "open",
+					"location": "Barberton High School Stadium \u00b7 555 Barber Rd, Barberton, OH 44203",
+					"body": "Free for all kids. <a href=\"#register\">Click here to register</a> - spots go fast.",
+					"detail": "A free night under the lights with John and a crew of coaches who care. Every kid runs drills, competes, and gets coached on effort, attitude, and toughness - no cost, no catch. Spots fill fast, so register early.",
+					"image": "/photos/events/football-camp.jpg",
+					"alt": "Youth football camp",
+					"featured": true,
+					"register_url": "https://app.betterunite.com/cominskyfamilyfoundation-johncominskyyouthfootballcamp/donate"
+				}
+			},
+			{
+				"id": "event-2",
+				"slug": "under-the-lights-free-youth-football-camp",
+				"status": "published",
+				"data": {
+					"title": "Under the Lights \u2014 Free Youth Football Camp",
+					"term": "Summer 2026",
+					"status_label": "Upcoming",
+					"status_kind": "upcoming",
+					"location": "Barberton, OH",
+					"body": "John speaks to the youth attending one of the free Under the Lights football camps - drills, effort, and heart.",
+					"detail": "The Under the Lights camp is where it all started. A free evening of football for the youth of Barberton, capped by John speaking directly to the kids about showing up, working hard, and pushing the rock every single day.",
+					"image": "/photos/initiatives/football-camp.jpg",
+					"alt": "Under the Lights youth football camp",
+					"featured": false
+				}
+			},
+			{
+				"id": "event-3",
+				"slug": "event-two-cblew",
+				"status": "published",
+				"data": {
+					"title": "6th Annual Cornhole Tournament",
+					"term": "Summer 2026",
+					"status_label": "Spots Full",
+					"status_kind": "closed",
+					"location": "Barberton Moose Lodge \u00b7 250 31st St NW, Barberton, OH 44203",
+					"body": "Our biggest fundraiser of the year - teams, boards, and a whole lot of community.",
+					"detail": "Grab a partner and toss some bags for a good cause. Our annual cornhole tournament brings the whole community together for a night of friendly competition, food, and fundraising for the Foundation's youth initiatives.",
+					"image": "/photos/events/cornhole.jpg",
+					"alt": "Cornhole tournament",
+					"featured": true
+				}
+			},
+			{
+				"id": "event-4",
+				"slug": "annual-dodgeball-tournament",
+				"status": "published",
+				"data": {
+					"title": "Barberton High School Dodgeball Tournament",
+					"term": "Spring 2026",
+					"status_label": "Upcoming",
+					"status_kind": "upcoming",
+					"location": "Barberton, OH",
+					"body": "In partnership with the Barberton DECA program - a springtime showdown for a good cause.",
+					"detail": "Run in partnership with the Barberton DECA program, our dodgeball tournament is a fast, fun springtime event that rallies students and the community around the Foundation's mission.",
+					"image": "/photos/story/drills.jpg",
+					"alt": "Dodgeball tournament action",
+					"featured": false
 				}
 			}
 		]

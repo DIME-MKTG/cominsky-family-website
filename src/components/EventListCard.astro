@@ -1,26 +1,28 @@
 ---
-import type { EventItem } from "../data/site";
+import { getEmDashCollection } from "emdash";
+
+type EventEntry = Awaited<ReturnType<typeof getEmDashCollection>>["entries"][number];
 
 interface Props {
-  event: EventItem;
+  event: EventEntry;
 }
 
 const { event } = Astro.props;
-const href = `/events/${event.slug}`;
+const href = `/events/${event.data.slug ?? event.id}`;
 ---
 
 <article class="ecard mo-lift" data-reveal="up">
-  <a href={href} class="ecard__media mo-zoom" aria-label={event.title}>
-    <img src={event.image} alt={event.alt} class="img-cover" loading="lazy" />
-    <span class:list={["ecard__status", `ecard__status--${event.statusKind}`]}>
-      {event.statusLabel}
+  <a href={href} class="ecard__media mo-zoom" aria-label={event.data.title}>
+    <img src={event.data.image} alt={event.data.alt ?? ""} class="img-cover" loading="lazy" />
+    <span class:list={["ecard__status", `ecard__status--${event.data.status_kind}`]}>
+      {event.data.status_label}
     </span>
   </a>
   <div class="ecard__body">
-    <span class="ecard__term">{event.term}</span>
-    <h3 class="ecard__title"><a href={href}>{event.title}</a></h3>
-    {event.location && <p class="ecard__loc">{event.location}</p>}
-    <p class="ecard__desc" set:html={event.bodyHtml} />
+    <span class="ecard__term">{event.data.term}</span>
+    <h3 class="ecard__title"><a href={href}>{event.data.title}</a></h3>
+    {event.data.location && <p class="ecard__loc">{event.data.location}</p>}
+    <p class="ecard__desc" set:html={event.data.body} />
     <a href={href} class="ecard__link">View event <span class="mo-arrow">→</span></a>
   </div>
 </article>

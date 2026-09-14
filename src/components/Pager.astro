@@ -1,28 +1,38 @@
 ---
 interface Props {
+	basePath: string;
 	currentPage: number;
 	hasPrev: boolean;
 	hasNext: boolean;
+	prevLabel?: string;
+	nextLabel?: string;
 }
 
-const { currentPage, hasPrev, hasNext } = Astro.props;
+const {
+	basePath,
+	currentPage,
+	hasPrev,
+	hasNext,
+	prevLabel = "Newer",
+	nextLabel = "Older",
+} = Astro.props;
 
-const pageHref = (page: number) => (page === 1 ? "/blog" : `/blog/page/${page}`);
+const pageHref = (page: number) => (page === 1 ? basePath : `${basePath}/page/${page}`);
 ---
 
 {
 	(hasPrev || hasNext) && (
-		<nav class="pager" aria-label="Blog pagination">
+		<nav class="pager" aria-label="Pagination">
 			{hasPrev ? (
 				<a href={pageHref(currentPage - 1)} class="pager__link pager__link--prev">
-					<span class="mo-arrow mo-arrow--back">←</span> Newer posts
+					<span class="mo-arrow mo-arrow--back">←</span> {prevLabel}
 				</a>
 			) : (
 				<span />
 			)}
 			{hasNext && (
 				<a href={pageHref(currentPage + 1)} class="pager__link pager__link--next">
-					Older posts <span class="mo-arrow">→</span>
+					{nextLabel} <span class="mo-arrow">→</span>
 				</a>
 			)}
 		</nav>
@@ -34,9 +44,9 @@ const pageHref = (page: number) => (page === 1 ? "/blog" : `/blog/page/${page}`)
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-top: var(--spacing-12);
-		padding-top: var(--spacing-8);
-		border-top: 1px solid var(--color-border-subtle);
+		margin-top: 48px;
+		padding-top: 32px;
+		border-top: 1px solid var(--c-border);
 	}
 
 	.pager__link {
@@ -44,12 +54,12 @@ const pageHref = (page: number) => (page === 1 ? "/blog" : `/blog/page/${page}`)
 		font-weight: 700;
 		letter-spacing: 0.5px;
 		text-transform: uppercase;
-		color: var(--color-brand);
+		color: var(--c-purple);
 		font-family: var(--font-label);
 	}
 
 	.pager__link:hover {
-		color: var(--color-brand-hover);
+		color: var(--c-purple-hover);
 	}
 
 	.pager__link--next {

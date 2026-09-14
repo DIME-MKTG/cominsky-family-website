@@ -1,54 +1,57 @@
 ---
+import { getEmDashEntry, decodeSlug } from "emdash";
 import PageLayout from "../../layouts/PageLayout.astro";
 import CtaBand from "../../components/CtaBand.astro";
-import { events, links } from "../../data/site";
+import { links } from "../../data/site";
 
-export const prerender = true;
+const slug = decodeSlug(Astro.params.slug);
 
-export function getStaticPaths() {
-  return events.map((event) => ({
-    params: { slug: event.slug },
-    props: { event },
-  }));
+if (!slug) {
+  return Astro.redirect("/404");
 }
 
-const { event } = Astro.props;
-const registerUrl = event.registerUrl ?? links.donate;
+const { entry: event } = await getEmDashEntry("events", slug);
+
+if (!event) {
+  return Astro.redirect("/404");
+}
+
+const registerUrl = event.data.register_url ?? links.donate;
 ---
 
 <PageLayout
-  title={`${event.title} — Cominsky Family Foundation`}
-  description={event.detailHtml?.replace(/<[^>]+>/g, "").slice(0, 155)}
+  title={`${event.data.title} — Cominsky Family Foundation`}
+  description={event.data.detail?.replace(/<[^>]+>/g, "").slice(0, 155)}
 >
   <article>
     <section class="ev-hero">
-      <img src={event.image} alt={event.alt} class="ev-hero__bg" data-parallax="34" />
+      <img src={event.data.image} alt={event.data.alt ?? ""} class="ev-hero__bg" data-parallax="34" />
       <div class="ev-hero__inner container" data-reveal-group="120">
         <a href="/events" class="ev-hero__back" data-reveal="fade">
           <span class="mo-arrow mo-arrow--back">←</span> All Events
         </a>
         <span
-          class:list={["ev-hero__status", `ev-hero__status--${event.statusKind}`]}
+          class:list={["ev-hero__status", `ev-hero__status--${event.data.status_kind}`]}
           data-reveal="scale"
         >
-          {event.statusLabel}
+          {event.data.status_label}
         </span>
-        <h1 class="ev-hero__title" data-split="words" data-split-step="75">{event.title}</h1>
-        <p class="ev-hero__term" data-reveal="up">{event.term}</p>
+        <h1 class="ev-hero__title" data-split="words" data-split-step="75">{event.data.title}</h1>
+        <p class="ev-hero__term" data-reveal="up">{event.data.term}</p>
       </div>
     </section>
 
     <section class="container container--narrow section ev-body" data-reveal-group="100">
-      {event.location && (
-        <p class="ev-meta" data-reveal="up"><span>Where</span>{event.location}</p>
+      {event.data.location && (
+        <p class="ev-meta" data-reveal="up"><span>Where</span>{event.data.location}</p>
       )}
-      <p class="ev-meta" data-reveal="up"><span>When</span>{event.term}</p>
+      <p class="ev-meta" data-reveal="up"><span>When</span>{event.data.term}</p>
 
-      <div class="ev-copy" data-reveal="up" set:html={event.detailHtml ?? event.bodyHtml} />
+      <div class="ev-copy" data-reveal="up" set:html={event.data.detail ?? event.data.body} />
 
       <div id="register" class="ev-actions" data-reveal="up">
         <a href={registerUrl} class="btn btn--gold btn--lg" target="_blank" rel="noopener noreferrer">
-          {event.statusKind === "closed" ? "Join the waitlist" : "Register / Support"}
+          {event.data.status_kind === "closed" ? "Join the waitlist" : "Register / Support"}
         </a>
         <a href="/contact-us" class="ev-ghost">Questions? Contact us <span class="mo-arrow">→</span></a>
       </div>

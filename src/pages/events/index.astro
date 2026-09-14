@@ -2,8 +2,11 @@
 import PageLayout from "../../layouts/PageLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import EventListCard from "../../components/EventListCard.astro";
+import Pager from "../../components/Pager.astro";
 import CtaBand from "../../components/CtaBand.astro";
-import { events } from "../../data/site";
+import { getEventsPage } from "../../utils/events-pagination";
+
+const { events, currentPage, hasNext, hasPrev } = await getEventsPage(1);
 ---
 
 <PageLayout
@@ -18,11 +21,29 @@ import { events } from "../../data/site";
   />
 
   <section class="container section container--mid">
-    <div class="events-grid" data-reveal-group="110">
-      {events.map((event) => (
-        <EventListCard event={event} />
-      ))}
-    </div>
+    {
+      events.length === 0 ? (
+        <p class="empty-state" data-reveal="up">
+          No events on the calendar right now — check back soon.
+        </p>
+      ) : (
+        <>
+          <div class="events-grid" data-reveal-group="110">
+            {events.map((event) => (
+              <EventListCard event={event} />
+            ))}
+          </div>
+          <Pager
+            basePath="/events"
+            currentPage={currentPage}
+            hasPrev={hasPrev}
+            hasNext={hasNext}
+            prevLabel="Newer events"
+            nextLabel="Older events"
+          />
+        </>
+      )
+    }
   </section>
 
   <CtaBand
@@ -43,5 +64,12 @@ import { events } from "../../data/site";
   }
   @media (max-width: 620px) {
     .events-grid { grid-template-columns: 1fr; }
+  }
+
+  .empty-state {
+    text-align: center;
+    font-size: 17px;
+    color: var(--c-body);
+    padding-block: 60px;
   }
 </style>

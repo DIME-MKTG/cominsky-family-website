@@ -1,11 +1,15 @@
 ---
-import { events } from "../data/site";
+import { getEmDashCollection } from "emdash";
 import EventCard from "./EventCard.astro";
 
 // Homepage shows just the two featured events in the split layout.
-const featured = events.filter((e) => e.featured).slice(0, 2);
+const { entries: events } = await getEmDashCollection("events", {
+	orderBy: { created_at: "desc" },
+});
+const featured = events.filter((e) => e.data.featured).slice(0, 2);
 ---
 
+{featured.length > 0 && (
 <section id="events" class="events container section">
   <div class="events__head" data-reveal-group="120">
     <div>
@@ -23,6 +27,7 @@ const featured = events.filter((e) => e.featured).slice(0, 2);
     ))}
   </div>
 </section>
+)}
 
 <style>
   .events__head {
