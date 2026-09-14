@@ -1,0 +1,304 @@
+---
+/**
+ * Motion engine — one instance per page, rendered by BaseLayout.
+ *
+ * Drives everything the motion layer (styles/motion.css) declares:
+ *   • [data-reveal]        scroll-in reveals (fade / up / mask / media / curtain)
+ *   • [data-reveal-group]  staggers the reveals nested inside it
+ *   • [data-split]         splits a heading into per-word / per-char units
+ *   • [data-parallax]      slow drift on full-bleed background images
+ *   • [data-countup]       animates a number up to the value already in the DOM
+ *   • .nav                 condensed header state + scroll progress line
+ *
+ * Nothing here is required for the page to be readable: motion.css only hides
+ * things once <html> carries the `js` class, and every entry point re-runs on
+ * `astro:page-load` so view-transition navigations behave like fresh loads.
+ */
+---
+
+<script>
+  type El = HTMLElement;
+
+  const REVEALS = "[data-reveal],[data-split]";
+  const reduced = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Torn down and rebuilt on every navigation. */
+  let observers: IntersectionObserver[] = [];
+  let detach: Array<() => void> = [];
+
+  /* ---------------------------------------------------------
+     Split text — wraps each word (or character) in a clipping
+     box so it can lift into place. <br> and nested markup pass
+     through untouched.
+     --------------------------------------------------------- */
+  function split(el: El) {
+    if (el.dataset.moSplit) return;
+
+    const mode = el.dataset.split === "chars" ? "chars" : "words";
+    const step = Number(el.dataset.splitStep) || (mode === "chars" ? 42 : 85);
+    const label = (el.textContent ?? "").replace(/\s+/g, " ").trim();
+    if (!label) return;
+
+    const out = document.createDocumentFragment();
+    let i = 0;
+
+    const addUnit = (text: string, target: DocumentFragment | HTMLElement = out) => {
+      const unit = document.createElement("span");
+      unit.className = "mo-unit";
+      const inner = document.createElement("span");
+      inner.className = "mo-inner";
+      inner.style.setProperty("--mo-d", `${i * step}ms`);
+      inner.textContent = text;
+      unit.appendChild(inner);
+      target.appendChild(unit);
+      i++;
+    };
+
+    for (const node of Array.from(el.childNodes)) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const words = (node.textContent ?? "").split(/(\s+)/);
+
+        for (const word of words) {
+          if (!word) continue;
+          if (/^\s+$/.test(word)) {
+            /* A bare text node, so the browser keeps its normal soft-wrap
+               opportunity here — a styled span would suppress it. */
+            out.appendChild(document.createTextNode(word));
+          } else if (mode === "chars") {
+            /* Chars stay together as one wrapper so the line only wraps
+               at word boundaries, not mid-word between two char spans. */
+            const wordEl = document.createElement("span");
+            wordEl.className = "mo-word";
+            for (const ch of Array.from(word)) addUnit(ch, wordEl);
+            out.appendChild(wordEl);
+          } else {
+            addUnit(word);
+          }
+        }
+      } else {
+        out.appendChild(node.cloneNode(true));
+      }
+    }
+
+    el.replaceChildren(out);
+    el.dataset.moSplit = "done";
+    /* Per-character spans read badly aloud — hand AT the whole string. */
+    if (mode === "chars" && !el.getAttribute("aria-label")) {
+      el.setAttribute("aria-label", label);
+    }
+  }
+
+  /* ---------------------------------------------------------
+     Stagger — a group writes an escalating base delay onto the
+     reveals it owns (skipping any nested group's own members).
+     --------------------------------------------------------- */
+  function stagger() {
+    document
+      .querySelectorAll<El>("[data-reveal-group]")
+      .forEach((group) => {
+        const step = Number(group.dataset.revealGroup) || 90;
+        members(group).forEach((m, i) =>
+          m.style.setProperty("--mo-base", `${i * step}ms`)
+        );
+      });
+
+    /* Explicit one-off offsets: data-delay="240" */
+    document.querySelectorAll<El>("[data-delay]").forEach((el) => {
+      el.style.setProperty("--mo-base", `${Number(el.dataset.delay) || 0}ms`);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     Number count-up
+     --------------------------------------------------------- */
+  function countUp(el: El) {
+    /* Runs at most once per element: a second pass would read the
+       partially-counted text as its new target and stall at zero. */
+    if (el.dataset.moCount) return;
+    el.dataset.moCount = "done";
+
+    const raw = el.textContent ?? "";
+    const match = raw.match(/-?\d[\d,]*(\.\d+)?/);
+    if (!match || match.index === undefined) return;
+
+    const literal = match[0];
+    const target = Number(literal.replace(/,/g, ""));
+    if (!Number.isFinite(target)) return;
+
+    const decimals = (literal.split(".")[1] ?? "").length;
+    const grouped = literal.includes(",");
+    const before = raw.slice(0, match.index);
+    const after = raw.slice(match.index + literal.length);
+    const duration = 1700;
+    const start = performance.now();
+
+    const render = (value: number) => {
+      const rounded = Number(value.toFixed(decimals));
+      const body = grouped
+        ? rounded.toLocaleString("en-US", {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+          })
+        : rounded.toFixed(decimals);
+      el.textContent = before + body + after;
+    };
+
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / duration);
+      render(target * (1 - Math.pow(1 - p, 4)));
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = raw;
+    };
+
+    render(0);
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------------------------------------------------------
+     Reveal wiring
+     --------------------------------------------------------- */
+  function members(group: El) {
+    return Array.from(group.querySelectorAll<El>(REVEALS)).filter(
+      (m) => m.closest("[data-reveal-group]") === group
+    );
+  }
+
+  function revealNow(el: El) {
+    if (el.hasAttribute("data-reveal-group")) {
+      members(el).forEach((m) => m.classList.add("is-in"));
+    }
+    el.classList.add("is-in");
+    if (el.hasAttribute("data-countup")) countUp(el);
+    el.querySelectorAll<El>("[data-countup]").forEach((c) => {
+      if (c.closest("[data-reveal-group]") === el) countUp(c);
+    });
+  }
+
+  function wireReveals() {
+    const groups = Array.from(
+      document.querySelectorAll<El>("[data-reveal-group]")
+    );
+    const loose = Array.from(document.querySelectorAll<El>(REVEALS)).filter(
+      (el) => !el.closest("[data-reveal-group]")
+    );
+    const counters = Array.from(
+      document.querySelectorAll<El>("[data-countup]")
+    ).filter((el) => !el.closest(`${REVEALS},[data-reveal-group]`));
+
+    const targets = [...groups, ...loose, ...counters];
+    if (!targets.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          io.unobserve(entry.target);
+          revealNow(entry.target as El);
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0 }
+    );
+    observers.push(io);
+
+    /* Paint the pre-reveal state once, then release whatever is
+       already at or above the fold so it animates in on arrival
+       (and so a restored deep scroll position is never blank). */
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const fold = window.innerHeight;
+        for (const el of targets) {
+          if (el.getBoundingClientRect().top < fold) revealNow(el);
+          else io.observe(el);
+        }
+      })
+    );
+  }
+
+  /* ---------------------------------------------------------
+     Scroll-driven: parallax, header state, progress line
+     --------------------------------------------------------- */
+  function wireScroll() {
+    const parallax = Array.from(
+      document.querySelectorAll<El>("[data-parallax]")
+    );
+    const nav = document.querySelector<El>(".nav");
+    if (!parallax.length && !nav) return;
+
+    let frame = 0;
+
+    const paint = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+
+      for (const el of parallax) {
+        const box = (el.parentElement ?? el).getBoundingClientRect();
+        if (box.bottom < -vh || box.top > vh * 2) continue;
+        const shift = Number(el.dataset.parallax) || 48;
+        /* -1 (below the fold) → 1 (above it) */
+        const p = (vh / 2 - (box.top + box.height / 2)) / vh;
+        el.style.setProperty(
+          "--mo-py",
+          `${(Math.max(-1.2, Math.min(1.2, p)) * shift).toFixed(2)}px`
+        );
+      }
+
+      if (nav) {
+        const y = window.scrollY;
+        const span =
+          document.documentElement.scrollHeight - window.innerHeight;
+        nav.classList.toggle("is-scrolled", y > 10);
+        nav.style.setProperty(
+          "--mo-progress",
+          span > 0 ? String(Math.min(1, y / span)) : "0"
+        );
+      }
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(paint);
+    };
+
+    paint();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    detach.push(() => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     Init / teardown
+     --------------------------------------------------------- */
+  function init() {
+    observers.forEach((o) => o.disconnect());
+    observers = [];
+    detach.forEach((fn) => fn());
+    detach = [];
+
+    if (reduced()) {
+      /* motion.css neutralises the transforms; just release everything. */
+      document
+        .querySelectorAll<El>(REVEALS)
+        .forEach((el) => el.classList.add("is-in"));
+      document.querySelectorAll<El>("[data-reveal-group]").forEach((el) =>
+        el.classList.add("is-in")
+      );
+      wireScroll();
+      return;
+    }
+
+    document.querySelectorAll<El>("[data-split]").forEach(split);
+    stagger();
+    wireReveals();
+    wireScroll();
+  }
+
+  /* ClientRouter also fires astro:page-load on the first load, so init()
+     runs twice on arrival. Every step above is idempotent, so that is
+     harmless — and it keeps motion working if the router is ever removed. */
+  init();
+  document.addEventListener("astro:page-load", init);
+</script>

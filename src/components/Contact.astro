@@ -1,0 +1,116 @@
+---
+import { site } from "../data/site";
+
+type ContainerVariant = "default" | "mid" | "narrow" | "tight";
+
+interface Props {
+  /** Show the eyebrow + "Get in touch" title (hide when a PageHero already covers it). */
+  heading?: boolean;
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  containerVariant?: ContainerVariant;
+}
+const {
+  heading = true,
+  eyebrow = "Contact Us",
+  title = "Get in touch",
+  body = "Help us inspire communities and build cultures to be proud of - attacking the unmet needs there.",
+  containerVariant = "default",
+} = Astro.props;
+
+const containerVariantClass =
+  containerVariant === "default" ? undefined : `container--${containerVariant}`;
+---
+
+<section id="contact" class:list={["contact", "container", containerVariantClass]}>
+  <div class="contact__inner" data-reveal-group="90">
+    <div class="contact__intro">
+      {heading && (
+        <>
+          <p class="eyebrow" data-reveal="up">{eyebrow}</p>
+          <h2 class="contact__title" data-reveal="mask">{title}</h2>
+        </>
+      )}
+      <p class="contact__body" data-reveal="up">{body}</p>
+      <a href={`mailto:${site.email}`} class="contact__email" data-reveal="up">{site.email}</a>
+    </div>
+
+    <form class="contact__form" name="contact" method="post">
+      <input type="text" name="first" placeholder="First Name (required)" required class="contact__input" data-reveal="up" />
+      <input type="text" name="last" placeholder="Last Name (required)" required class="contact__input" data-reveal="up" />
+      <input type="email" name="email" placeholder="Email (required)" required class="contact__input contact__input--full" data-reveal="up" />
+      <textarea name="message" placeholder="Message (required)" rows="4" required class="contact__input contact__input--full contact__textarea" data-reveal="up"></textarea>
+      <button type="submit" class="btn btn--primary contact__submit" data-reveal="up" disabled>Submit</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contact { padding-bottom: var(--section-y); }
+  .contact__inner {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 70px;
+    border-top: 1px solid var(--c-border);
+    padding-top: 90px;
+  }
+
+  .contact__title {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 3.6vw, 44px);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 16px;
+  }
+  .contact__intro .eyebrow { margin-bottom: 14px; }
+  .contact__body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--c-body);
+    margin: 0 0 10px;
+  }
+  .contact__email { font-weight: 700; font-size: 15px; }
+
+  .contact__form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    min-width: 0;
+  }
+  .contact__input {
+    width: 100%;
+    min-width: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--c-ink);
+    background: var(--c-white);
+  }
+  .contact__input:focus-visible {
+    outline: 2px solid var(--c-purple);
+    outline-offset: 1px;
+    border-color: var(--c-purple);
+  }
+  .contact__input--full { grid-column: span 2; }
+  .contact__textarea { resize: vertical; }
+  .contact__submit {
+    grid-column: span 2;
+    justify-self: start;
+    padding: 14px 34px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 760px) {
+    .contact__inner {
+      grid-template-columns: 1fr;
+      gap: 34px;
+      padding-top: 56px;
+    }
+    .contact__form { grid-template-columns: 1fr; }
+    .contact__input--full,
+    .contact__submit { grid-column: span 1; }
+  }
+</style>

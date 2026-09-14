@@ -1,0 +1,47 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import PageHero from "../../components/PageHero.astro";
+import EventListCard from "../../components/EventListCard.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import { events } from "../../data/site";
+---
+
+<PageLayout
+  title="Events — Cominsky Family Foundation"
+  description="Upcoming Cominsky Family Foundation events — youth football camps, cornhole and dodgeball tournaments, and more."
+>
+  <PageHero
+    eyebrow="Upcoming"
+    title="Get in the game"
+    image="/photos/events/football-camp.jpg"
+    imageAlt="Youth football camp under the lights"
+  />
+
+  <section class="container section container--mid">
+    <div class="events-grid" data-reveal-group="110">
+      {events.map((event) => (
+        <EventListCard event={event} />
+      ))}
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Can't Make It?"
+    title="You can still push the rock"
+    body="Sponsor a camper, back a tournament, or give directly — every bit fuels the next event."
+  />
+</PageLayout>
+
+<style>
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 960px) {
+    .events-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 620px) {
+    .events-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,27 @@
+---
+import { initiatives } from "../data/site";
+import SectionHeading from "./SectionHeading.astro";
+import InitiativeRow from "./InitiativeRow.astro";
+---
+
+<section id="initiatives" class="initiatives container section">
+  <SectionHeading
+    eyebrow="What We Do"
+    title="Work worth doing"
+    intro="Four ways we push the rock for the youth of Barberton and beyond."
+    layout="split"
+  />
+
+  <div class="initiatives__list">
+    {initiatives.map((initiative) => (
+      <InitiativeRow initiative={initiative} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .initiatives__list {
+    border-top: 1px solid var(--c-border);
+    margin-top: 26px;
+  }
+</style>

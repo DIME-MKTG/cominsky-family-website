@@ -1,0 +1,73 @@
+---
+import { events } from "../data/site";
+import EventCard from "./EventCard.astro";
+
+// Homepage shows just the two featured events in the split layout.
+const featured = events.filter((e) => e.featured).slice(0, 2);
+---
+
+<section id="events" class="events container section">
+  <div class="events__head" data-reveal-group="120">
+    <div>
+      <p class="eyebrow" data-reveal="up">Upcoming</p>
+      <h2 class="section-title events__title" data-split="words" data-split-step="70">Get in the game</h2>
+    </div>
+    <a href="/events" class="events__all" data-reveal="up">
+      All events <span class="mo-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="events__grid">
+    {featured.map((event) => (
+      <EventCard event={event} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .events__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 0 0 40px;
+  }
+  .events__title { margin: 0; font-weight: 500; }
+  .events__all {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--c-purple);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .events__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--c-border);
+  }
+  /* Column divider + shared vertical padding between the two cards */
+  .events__grid > :global(.event) {
+    border-bottom: 1px solid var(--c-border);
+  }
+  .events__grid > :global(.event:first-child) {
+    padding-right: 44px;
+    border-right: 1px solid var(--c-border);
+  }
+  .events__grid > :global(.event:last-child) {
+    padding-left: 44px;
+  }
+
+  @media (max-width: 760px) {
+    .events__grid { grid-template-columns: 1fr; }
+    .events__grid > :global(.event:first-child) {
+      padding-right: 0;
+      border-right: none;
+    }
+    .events__grid > :global(.event:last-child) {
+      padding-left: 0;
+    }
+  }
+</style>

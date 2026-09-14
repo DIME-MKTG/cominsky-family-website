@@ -1,0 +1,126 @@
+---
+import { goal } from "../data/site";
+
+interface Props {
+  show?: boolean;
+  label?: string;
+  target?: string;
+  raisedPercent?: number;
+}
+
+const {
+  show = goal.show,
+  label = goal.label,
+  target = goal.target,
+  raisedPercent = goal.raisedPercent,
+} = Astro.props;
+---
+
+{show && (
+  <section class="goal" aria-label={`Fundraising goal for ${label}`}>
+    <div class="goal__inner container" data-reveal-group="120">
+      <div class="goal__copy">
+        <p class="eyebrow eyebrow--gold" data-reveal="up">Right Now</p>
+        <p class="goal__title" data-reveal="mask">Help us raise {target} for {label}</p>
+        <p class="goal__body" data-reveal="up">
+          Every backpack is funded by people like you. Help us keep them full for
+          kids across our community.
+        </p>
+      </div>
+
+      <div class="goal__meter">
+        <div class="goal__meter-head" data-reveal="up">
+          <span>OUR GOAL</span><span class="goal__amount" data-countup>{target}</span>
+        </div>
+        <div
+          class="goal__track"
+          data-reveal="fade"
+          style={`--goal-fill: ${raisedPercent}%`}
+        >
+          <div class="goal__fill"></div>
+        </div>
+        <a href="#donate" class="btn btn--gold" data-reveal="up">Support {label}</a>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .goal {
+    background: var(--c-purple);
+    color: var(--c-cream);
+  }
+  .btn {
+    font-size: clamp(18px, 2vw, 28px);
+  }
+  .goal__inner {
+    padding-block: 90px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 70px;
+    align-items: center;
+  }
+  .goal__copy .eyebrow { margin-bottom: 16px; }
+  .goal__title {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 3.6vw, 44px);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+    margin: 0;
+  }
+  .goal__body {
+    margin: 16px 0 0;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--c-lavender);
+    max-width: 710px;
+  }
+
+  .goal__meter {
+    display: flex;
+    flex-direction: column;
+  }
+  .goal__meter .btn { align-self: center; }
+  .goal__meter-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 23px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--c-lavender);
+    font-family: var(--font-label);
+  }
+  .goal__amount {
+    color: var(--c-gold);
+    /* Digits keep their box while counting up, so nothing jitters. */
+    font-variant-numeric: tabular-nums;
+  }
+  .goal__track {
+    height: 18px;
+    background: #F5F6F92E;
+    border-radius: 11px;
+    overflow: hidden;
+    margin-bottom: 26px;
+  }
+  .goal__fill {
+    height: 100%;
+    width: var(--goal-fill, 0%);
+    background: var(--c-gold);
+  }
+  /* The bar sweeps out to the raised figure as the meter comes into view. */
+  :global(html.js) .goal__track .goal__fill { width: 0; }
+  :global(html.js) .goal__track.is-in .goal__fill {
+    width: var(--goal-fill, 0%);
+    transition: width 1700ms var(--mo-ease) 220ms;
+  }
+
+  @media (max-width: 760px) {
+    .goal__inner {
+      grid-template-columns: 1fr;
+      gap: 34px;
+      padding-block: 64px;
+    }
+  }
+</style>

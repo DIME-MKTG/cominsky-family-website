@@ -133,8 +133,8 @@
 			"items": [
 				{
 					"type": "custom",
-					"label": "Home",
-					"url": "/"
+					"label": "Blog Home",
+					"url": "/blog"
 				},
 				{
 					"type": "custom",
@@ -144,7 +144,7 @@
 				{
 					"type": "custom",
 					"label": "Posts",
-					"url": "/posts"
+					"url": "/blog/posts"
 				}
 			]
 		}

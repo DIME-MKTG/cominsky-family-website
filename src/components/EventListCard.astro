@@ -1,0 +1,104 @@
+---
+import type { EventItem } from "../data/site";
+
+interface Props {
+  event: EventItem;
+}
+
+const { event } = Astro.props;
+const href = `/events/${event.slug}`;
+---
+
+<article class="ecard mo-lift" data-reveal="up">
+  <a href={href} class="ecard__media mo-zoom" aria-label={event.title}>
+    <img src={event.image} alt={event.alt} class="img-cover" loading="lazy" />
+    <span class:list={["ecard__status", `ecard__status--${event.statusKind}`]}>
+      {event.statusLabel}
+    </span>
+  </a>
+  <div class="ecard__body">
+    <span class="ecard__term">{event.term}</span>
+    <h3 class="ecard__title"><a href={href}>{event.title}</a></h3>
+    {event.location && <p class="ecard__loc">{event.location}</p>}
+    <p class="ecard__desc" set:html={event.bodyHtml} />
+    <a href={href} class="ecard__link">View event <span class="mo-arrow">→</span></a>
+  </div>
+</article>
+
+<style>
+  .ecard {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--c-white);
+  }
+  .ecard__media {
+    position: relative;
+    display: block;
+    height: 220px;
+    overflow: hidden;
+  }
+  .ecard:hover .ecard__media img { transform: scale(1.05); }
+  .ecard__status {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 5px 11px;
+    border-radius: var(--radius);
+    font-family: var(--font-label);
+  }
+  .ecard__status--open { background: var(--c-gold); color: var(--c-ink); }
+  .ecard__status--closed { background: var(--c-ink); color: var(--c-cream); }
+  .ecard__status--upcoming { background: var(--c-cream); color: var(--c-ink); border: 1px solid var(--c-line); }
+
+  .ecard__body {
+    padding: 26px 26px 30px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .ecard__term {
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--c-stone);
+    text-transform: uppercase;
+    font-family: var(--font-label);
+  }
+  .ecard__title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 12px 0 10px;
+    font-weight: 500;
+  }
+  .ecard__title a { color: var(--c-ink); }
+  .ecard__title a:hover { color: var(--c-purple); }
+  .ecard__loc {
+    font-size: 14px;
+    color: var(--c-muted);
+    margin: 0 0 12px;
+  }
+  .ecard__desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--c-muted);
+    margin: 0 0 20px;
+  }
+  .ecard__link {
+    margin-top: auto;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--c-purple);
+    font-family: var(--font-label);
+  }
+</style>

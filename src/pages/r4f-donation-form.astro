@@ -1,0 +1,120 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { r4fOptions, links } from "../data/site";
+---
+
+<PageLayout
+  title="R4F Donation Form — Cominsky Family Foundation"
+  description="Give to JC's Run for Funds. Choose a giving option and support youth outreach in Barberton, Ohio."
+>
+  <PageHero
+    eyebrow="JC's R4F"
+    title="Give to the run"
+    intro="Pick how you'd like to give below. Every contribution powers our youth outreach."
+  />
+
+  <section class="container container--narrow section rform">
+    <form class="rform__form" name="r4f-donation" method="post">
+      <fieldset class="rform__options" data-reveal-group="80">
+        <legend class="eyebrow" data-reveal="up">Choose your gift</legend>
+        {r4fOptions.map((opt, i) => (
+          <label class="ropt" data-reveal="up">
+            <input type="radio" name="option" value={opt.title} checked={i === 0} />
+            <span class="ropt__body">
+              <span class="ropt__title">{opt.title}</span>
+              <span class="ropt__detail">{opt.detail}</span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
+
+      <div class="rform__fields" data-reveal-group="70">
+        <input type="text" name="first" placeholder="First Name (required)" required class="rform__input" data-reveal="up" />
+        <input type="text" name="last" placeholder="Last Name (required)" required class="rform__input" data-reveal="up" />
+        <input type="email" name="email" placeholder="Email (required)" required class="rform__input rform__input--full" data-reveal="up" />
+        <input type="text" name="amount" placeholder="Amount ($)" class="rform__input" data-reveal="up" />
+        <input type="text" name="business" placeholder="Business / logo (optional)" class="rform__input" data-reveal="up" />
+        <textarea name="message" placeholder="Message (optional)" rows="3" class="rform__input rform__input--full rform__textarea" data-reveal="up"></textarea>
+        <button type="submit" class="btn btn--primary rform__submit" data-reveal="up" disabled>Submit my gift</button>
+      </div>
+    </form>
+
+    <p class="rform__alt" data-reveal="fade">
+      Prefer to give online? You can also
+      <a href={links.donate} target="_blank" rel="noopener noreferrer">donate through our secure portal</a>.
+    </p>
+  </section>
+</PageLayout>
+
+<style>
+  .rform__options {
+    border: none;
+    padding: 0;
+    margin: 0 0 36px;
+    display: grid;
+    gap: 12px;
+  }
+  .rform__options .eyebrow { margin-bottom: 14px; padding: 0; }
+  .ropt {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .ropt:hover { border-color: var(--c-line); }
+  .ropt:has(input:checked) {
+    border-color: var(--c-purple);
+    background: #faf6fc;
+  }
+  .ropt input { margin-top: 4px; accent-color: var(--c-purple); }
+  .ropt__title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .ropt__detail {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--c-muted);
+  }
+
+  .rform__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .rform__input {
+    padding: 14px 16px;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    font-size: 14px;
+  }
+  .rform__input:focus-visible {
+    outline: 2px solid var(--c-purple);
+    outline-offset: 1px;
+    border-color: var(--c-purple);
+  }
+  .rform__input--full { grid-column: span 2; }
+  .rform__textarea { resize: vertical; }
+  .rform__submit { grid-column: span 2; justify-self: start; padding: 14px 34px; }
+  .rform__alt {
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--c-muted);
+  }
+
+  @media (max-width: 620px) {
+    .rform__fields { grid-template-columns: 1fr; }
+    .rform__input--full,
+    .rform__submit { grid-column: span 1; }
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+/**
+ * Reusable section heading: eyebrow + display title, with optional intro copy.
+ * `layout="split"` places the intro to the right of the title (desktop).
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro?: string;
+  align?: "left" | "center";
+  layout?: "stack" | "split";
+}
+
+const { eyebrow, title, intro, align = "left", layout = "stack" } = Astro.props;
+---
+
+<div
+  class:list={["heading", `heading--${align}`, layout === "split" && intro && "heading--split"]}
+  data-reveal-group="120"
+>
+  <div class="heading__main">
+    <p class="eyebrow" data-reveal="up">{eyebrow}</p>
+    <h2 class="section-title" data-split="words" data-split-step="70" set:html={title} />
+  </div>
+  {intro && <p class="heading__intro" data-reveal="up">{intro}</p>}
+</div>
+
+<style>
+  .heading__main .eyebrow { margin-bottom: 14px; }
+  .heading--center { text-align: center; }
+  .heading--center .heading__intro {
+    max-width: 640px;
+    margin: 26px auto 0;
+  }
+  .heading__intro {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--c-muted);
+    margin: 16px 0 0;
+  }
+
+  /* Title left, intro right, baseline-aligned */
+  .heading--split {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .heading--split .heading__intro {
+    max-width: 340px;
+    text-align: right;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 760px) {
+    .heading--split {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .heading--split .heading__intro {
+      text-align: left;
+      max-width: none;
+    }
+  }
+</style>

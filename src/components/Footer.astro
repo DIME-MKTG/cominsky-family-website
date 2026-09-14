@@ -1,0 +1,88 @@
+---
+import { footerLinks, links, site } from "../data/site";
+---
+
+<footer id="donate" class="footer">
+  <div class="footer__inner" data-reveal-group="110">
+    <img
+      src="/brand/brandmark-chalk.svg"
+      alt="Cominsky Family Foundation"
+      class="footer__logo"
+      width="280"
+      data-reveal="scale"
+    />
+    <p class="footer__headline" data-split="words" data-split-step="70">The work's never done.</p>
+    <p class="footer__sub" data-reveal="up">Push the rock with us.</p>
+    <a
+      href={links.donate}
+      class="btn btn--gold btn--lg footer__donate"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-reveal="up"
+    >
+      Donate Now
+    </a>
+
+    <nav class="footer__nav" aria-label="Footer" data-reveal="fade">
+      {footerLinks.map((link) => (
+        <a href={link.href} class="footer__link">{link.label}</a>
+      ))}
+    </nav>
+
+    <p class="footer__legal" data-reveal="fade">
+      © {site.year} The {site.name} — {site.location} · {site.status} non-profit
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--c-ink-900);
+    color: var(--c-cream);
+    padding: 100px var(--gutter) 60px;
+    text-align: center;
+  }
+  .footer__inner {
+    max-width: var(--container);
+    margin-inline: auto;
+  }
+  .footer__logo {
+    width: 280px;
+    max-width: 80%;
+    height: auto;
+    margin-bottom: 30px;
+  }
+  .footer__headline {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .footer__sub {
+    font-size: 16px;
+    color: var(--c-faint);
+    margin: 0 0 30px;
+  }
+  .footer__donate { margin-bottom: 54px; }
+
+  .footer__nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 28px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 26px;
+    font-family: var(--font-label);
+  }
+  .footer__link { color: var(--c-faint); }
+  .footer__link:hover { color: var(--c-cream); }
+
+  .footer__legal {
+    font-size: 12px;
+    color: var(--c-stone);
+    margin: 0;
+    font-family: var(--font-label);
+  }
+</style>

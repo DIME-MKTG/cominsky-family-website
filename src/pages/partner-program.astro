@@ -1,0 +1,121 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { partners } from "../data/site";
+---
+
+<PageLayout
+  title="Partner Program — Cominsky Family Foundation"
+  description="Partner with the Cominsky Family Foundation to provide food, clothing, event space, and opportunities to the youth of Barberton."
+>
+  <PageHero
+    eyebrow="Become a Partner"
+    title="Together, we can<br />make a difference"
+    intro="John and Brittany can't do this alone. Local businesses help us reach further into the community — and there's room for you."
+  />
+
+  <section class="container container--narrow section">
+    <p class="pp-lead" data-reveal="up">
+      If you or your business would like to partner with us to provide access to
+      food, clothes, event space, donations, or opportunities, we'd love to start
+      the conversation about what we can build together for our community.
+    </p>
+
+    <div class="pp-ways" data-reveal-group="90">
+      {["Food & sustenance", "Clothing & essentials", "Event space", "Donations & opportunities"].map((w) => (
+        <div class="pp-way mo-lift" data-reveal="up">{w}</div>
+      ))}
+    </div>
+
+    <h2 class="pp-heading" data-split="words" data-split-step="70">Partners who show up</h2>
+    <div class="pp-partners" data-reveal-group="70">
+      {partners.map((p) => (
+        <div class="pp-partner" data-reveal="up">
+          <div class="pp-partner__name">
+            {p.url ? (
+              <a href={p.url} target="_blank" rel="noopener noreferrer">{p.name}</a>
+            ) : (
+              p.name
+            )}
+          </div>
+          <div class="pp-partner__note">{p.note}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="pp-cta" data-reveal="up">
+      <a href="/contact-us" class="btn btn--primary btn--lg">Start the conversation</a>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .pp-lead {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--c-body);
+    max-width: 720px;
+    margin: 0 0 44px;
+  }
+  .pp-ways {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 80px;
+  }
+  .pp-way {
+    background: var(--c-white);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 26px 20px;
+    font-family: var(--font-display);
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+  }
+  .pp-heading {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.4vw, 40px);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 24px;
+    font-weight: 500;
+  }
+  .pp-partners {
+    border-top: 1px solid var(--c-border);
+  }
+  .pp-partner {
+    transition: background-color 450ms var(--mo-ease), padding-inline 450ms var(--mo-ease);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .pp-partner__name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 400ms var(--mo-ease);
+  }
+  .pp-partner:hover .pp-partner__name { color: var(--c-purple); }
+  .pp-partner__note {
+    font-size: 14px;
+    color: var(--c-muted);
+    text-align: right;
+  }
+  .pp-cta { margin-top: 48px; }
+
+  @media (max-width: 760px) {
+    .pp-ways { grid-template-columns: 1fr 1fr; }
+    .pp-cta { text-align: center; }
+  }
+  @media (max-width: 460px) {
+    .pp-ways { grid-template-columns: 1fr; }
+    .pp-partner { flex-direction: column; gap: 4px; }
+    .pp-partner__note { text-align: left; }
+  }
+</style>

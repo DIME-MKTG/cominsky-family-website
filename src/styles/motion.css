@@ -1,0 +1,319 @@
+/* =========================================================
+   Cominsky Family Foundation — Motion layer
+   ---------------------------------------------------------
+   Scroll reveals, text splits, parallax and hover polish.
+
+   Everything is gated behind `html.js`, which is set by an
+   inline script in <head>. Without JS the page renders fully
+   visible and static — nothing here can hide content.
+   ========================================================= */
+
+:root {
+  /* Easings — long tails, no overshoot. Expensive, not bouncy. */
+  --mo-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --mo-ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+
+  /* Durations */
+  --mo-dur: 900ms;
+  --mo-dur-media: 1300ms;
+  --mo-dur-slow: 1500ms;
+
+  /* Delay composition: --mo-base is the stagger the engine writes onto a
+     group member; --mo-d is a unit-level offset (split words/chars). */
+  --mo-base: 0ms;
+  --mo-d: 0ms;
+  --mo-delay: calc(var(--mo-base, 0ms) + var(--mo-d, 0ms));
+}
+
+/* ---------------------------------------------------------
+   1. Reveal primitives
+   --------------------------------------------------------- */
+
+.js [data-reveal] {
+  transition:
+    opacity var(--mo-dur) var(--mo-ease) var(--mo-delay),
+    transform var(--mo-dur) var(--mo-ease) var(--mo-delay),
+    clip-path var(--mo-dur) var(--mo-ease) var(--mo-delay);
+}
+
+/* Default + directional fades */
+.js [data-reveal=""],
+.js [data-reveal="fade"],
+.js [data-reveal="up"] { opacity: 0; }
+
+.js [data-reveal="up"] { transform: translate3d(0, 26px, 0); }
+.js [data-reveal="down"] { opacity: 0; transform: translate3d(0, -20px, 0); }
+.js [data-reveal="left"] { opacity: 0; transform: translate3d(-32px, 0, 0); }
+.js [data-reveal="right"] { opacity: 0; transform: translate3d(32px, 0, 0); }
+.js [data-reveal="scale"] { opacity: 0; transform: scale(0.96); }
+
+/* Editorial curtain wipe — for display type. Bleeds horizontally
+   and below so descenders and letter-spacing never clip. */
+.js [data-reveal="mask"] {
+  clip-path: inset(-12% -6% 106% -6%);
+  transform: translate3d(0, 0.14em, 0);
+}
+
+/* Media: wrapper fades, inner image settles out of a slight
+   over-scale. Wrapper keeps its own overflow/radius. */
+.js [data-reveal="media"] { opacity: 0; }
+.js [data-reveal="media"] > img,
+.js [data-reveal="media"] > a > img,
+.js [data-reveal="media"] > picture > img {
+  transform: scale(1.07);
+  transition: transform var(--mo-dur-slow) var(--mo-ease) var(--mo-delay);
+}
+
+/* Curtain for full-bleed media that has no border radius. */
+.js [data-reveal="curtain"] { clip-path: inset(0 0 100% 0); }
+
+/* --- Settled state --- */
+.js [data-reveal].is-in { opacity: 1; }
+/* Parallax owns the transform on its element, so don't clear it. */
+.js [data-reveal].is-in:not([data-parallax]) { transform: none; }
+.js [data-reveal="mask"].is-in { clip-path: inset(-12% -6% -12% -6%); }
+.js [data-reveal="curtain"].is-in { clip-path: inset(0 0 0 0); }
+.js [data-reveal="media"].is-in > img,
+.js [data-reveal="media"].is-in > a > img,
+.js [data-reveal="media"].is-in > picture > img { transform: scale(1); }
+
+/* No blanket will-change: a long page arms 70+ reveals at once, and
+   promoting all of them costs more memory than it buys. The translate3d
+   above is enough of a hint for the ones that actually animate. */
+
+/* ---------------------------------------------------------
+   2. Gold rule that draws itself in
+   (present without JS too — it just starts already drawn)
+   --------------------------------------------------------- */
+[data-line] { position: relative; }
+[data-line]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--c-gold);
+  transform-origin: left center;
+}
+.js [data-line]::after {
+  transform: scaleX(0);
+  transition: transform 1100ms var(--mo-ease) var(--mo-delay);
+}
+.js [data-line].is-in::after { transform: scaleX(1); }
+
+/* ---------------------------------------------------------
+   3. Split text — per-character / per-word lift
+   --------------------------------------------------------- */
+/* Units lift and fade rather than sliding out of a clipping box: the
+   display face is tall and set on tight leading, so an overflow mask
+   would shave the caps. */
+.mo-unit { display: inline-block; }
+.mo-word { display: inline-block; white-space: nowrap; }
+.mo-inner {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 0.42em, 0);
+  transition:
+    opacity var(--mo-dur) var(--mo-ease) var(--mo-delay),
+    transform var(--mo-dur) var(--mo-ease) var(--mo-delay);
+}
+[data-split].is-in .mo-inner { opacity: 1; transform: none; }
+
+/* ---------------------------------------------------------
+   4. Parallax (never combined with a transform-based reveal)
+   --------------------------------------------------------- */
+.js [data-parallax] {
+  transform: translate3d(0, var(--mo-py, 0px), 0) scale(var(--mo-pscale, 1.12));
+  will-change: transform;
+}
+/* On phones the drift costs more than it adds, and the over-scale would
+   crop the photo harder on the smaller frame. */
+@media (max-width: 860px) {
+  .js [data-parallax] { transform: none; will-change: auto; }
+}
+
+/* ---------------------------------------------------------
+   5. Scroll progress line (rides under the sticky header)
+   --------------------------------------------------------- */
+.mo-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--c-gold);
+  transform: scaleX(var(--mo-progress, 0));
+  transform-origin: left center;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+}
+.nav.is-scrolled .mo-progress { opacity: 1; }
+
+/* ---------------------------------------------------------
+   6. Micro-interactions — always on, JS not required
+   --------------------------------------------------------- */
+
+/* Buttons: a small, weighted lift. */
+.btn {
+  transition:
+    transform 380ms var(--mo-ease),
+    box-shadow 380ms var(--mo-ease),
+    background-color 300ms ease,
+    filter 300ms ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -8px rgba(31, 29, 30, 0.35);
+}
+.btn:active { transform: translateY(0); box-shadow: none; }
+.btn--gold:hover { box-shadow: 0 12px 28px -10px rgba(255, 184, 28, 0.7); }
+
+/* Text links settle into purple rather than snapping. */
+.hero__cta,
+.btn-ghost,
+.ev-ghost,
+.ev-hero__back,
+.ecard__link,
+.ecard__title a,
+.events__all,
+.r4f-card__cta,
+.contact__email,
+.reach__item a { transition: color 320ms ease; }
+
+/* Arrow nudge on "→" links. */
+.mo-arrow {
+  display: inline-block;
+  transition: transform 400ms var(--mo-ease);
+}
+a:hover > .mo-arrow { transform: translateX(5px); }
+a:hover > .mo-arrow--down { transform: translateY(4px); }
+a:hover > .mo-arrow--back { transform: translateX(-5px); }
+
+/* Nav links: gold underline grows from the left. */
+.nav__link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: var(--c-gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 420ms var(--mo-ease);
+}
+.nav__link:hover::before { transform: scaleX(1); }
+.nav__link { transition: color 300ms ease; }
+
+/* Header condenses and lifts a shadow once you leave the top. */
+.nav {
+  transition:
+    padding 500ms var(--mo-ease),
+    box-shadow 500ms var(--mo-ease);
+}
+.nav.is-scrolled {
+  padding-block: 12px;
+  box-shadow: 0 10px 30px -20px rgba(31, 29, 30, 0.5);
+}
+.nav__logo { transition: transform 500ms var(--mo-ease); }
+.nav.is-scrolled .nav__logo { transform: scale(0.92); }
+.nav__brand:hover .nav__logo { transform: scale(1.03); }
+
+/* Footer links */
+.footer__link {
+  position: relative;
+  transition: color 300ms ease;
+}
+.footer__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: var(--c-gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 420ms var(--mo-ease);
+}
+.footer__link:hover::after { transform: scaleX(1); }
+
+/* Form fields */
+.contact__input,
+.merch__input,
+.rform__input {
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    background-color 300ms ease;
+}
+.contact__input:hover,
+.merch__input:hover,
+.rform__input:hover { border-color: var(--c-stone); }
+.contact__input:focus,
+.merch__input:focus,
+.rform__input:focus {
+  box-shadow: 0 6px 20px -12px rgba(75, 0, 110, 0.5);
+}
+
+/* Any figure-wrapped image inside a hoverable card breathes slightly. */
+.mo-zoom { overflow: hidden; }
+.mo-zoom img { transition: transform 900ms var(--mo-ease); }
+.mo-lift {
+  transition:
+    transform 500ms var(--mo-ease),
+    box-shadow 500ms var(--mo-ease),
+    border-color 500ms var(--mo-ease);
+}
+.mo-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -28px rgba(31, 29, 30, 0.45);
+  border-color: var(--c-line);
+}
+.mo-lift:hover .mo-zoom img,
+.mo-zoom:hover img { transform: scale(1.05); }
+
+/* ---------------------------------------------------------
+   7. View-transition page choreography
+   --------------------------------------------------------- */
+@keyframes mo-page-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mo-page-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* The outgoing page dissolves quickly; the incoming one rises in.
+   The header opts out of the snapshot entirely so it never flickers. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: mo-page-out 220ms var(--mo-ease-soft) forwards;
+  }
+  ::view-transition-new(root) {
+    animation: mo-page-in 480ms var(--mo-ease) forwards;
+  }
+}
+
+/* ---------------------------------------------------------
+   8. Reduced motion — hand back a completely static page
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal] > img,
+  .js [data-parallax],
+  .mo-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  /* The drawn rule is real content, so it stays. The nav/footer
+     underlines are hover affordances and must stay at rest. */
+  .js [data-line]::after { transform: scaleX(1) !important; }
+  .mo-progress { display: none; }
+  .btn:hover,
+  .mo-lift:hover { transform: none; }
+}

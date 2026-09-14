@@ -1,0 +1,89 @@
+---
+import { storyFeature, storyStack, storyRow } from "../data/site";
+---
+
+<section class="story container">
+  <div data-reveal-group="120">
+    <p class="eyebrow" data-reveal="up">Under the Lights</p>
+    <h2 class="section-title story__title" data-split="words" data-split-step="70">The story tells itself</h2>
+  </div>
+
+  <div class="story__top" data-reveal-group="110">
+    <figure class="story__feature mo-zoom" data-reveal="media">
+      <img src={storyFeature.image} alt={storyFeature.alt} class="img-cover" loading="lazy" />
+    </figure>
+    {storyStack.map((img) => (
+      <figure class="story__cell mo-zoom" data-reveal="media">
+        <img
+          src={img.image}
+          alt={img.alt}
+          class="img-cover"
+          style={img.objectPosition ? `object-position: ${img.objectPosition}` : undefined}
+          loading="lazy"
+        />
+      </figure>
+    ))}
+  </div>
+
+  <div class="story__row" data-reveal-group="110">
+    {storyRow.map((img) => (
+      <figure class="story__cell story__cell--wide mo-zoom" data-reveal="media">
+        <img
+          src={img.image}
+          alt={img.alt}
+          class="img-cover"
+          style={img.objectPosition ? `object-position: ${img.objectPosition}` : undefined}
+          loading="lazy"
+        />
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .story { padding-top: var(--section-y); }
+  .story__title { margin: 0 0 40px; }
+
+  .story__top {
+    display: grid;
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 324px));
+    gap: 12px;
+  }
+  .story__feature {
+    grid-row: span 2;
+    aspect-ratio: 0.90;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin: 0;
+  }
+  .story__cell {
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin: 0;
+  }
+
+  .story__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .story__cell--wide { aspect-ratio: 1.85; }
+
+  @media (max-width: 760px) {
+    .story__top {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+    }
+    .story__feature {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      height: 62vw;
+      aspect-ratio: auto;
+    }
+    .story__top > .story__cell { height: 40vw; }
+    .story__row { grid-template-columns: 1fr 1fr; }
+    .story__cell--wide { height: 40vw; aspect-ratio: auto; }
+  }
+</style>

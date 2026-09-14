@@ -1,0 +1,92 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBand from "../components/CtaBand.astro";
+---
+
+<PageLayout
+  title="Mission Statement — Cominsky Family Foundation"
+  description="Our mission: supporting the youth of Barberton, Ohio by understanding their needs and putting our resources to work."
+>
+  <PageHero
+    eyebrow="Our Mission, Our Statement"
+    title="It takes a village —<br />we're building ours."
+  />
+
+  <section class="container container--narrow section">
+    <div class="mission-grid" data-reveal-group="130">
+      <div>
+        <p class="eyebrow" data-reveal="up">Mission</p>
+        <p class="mission-block" data-reveal="mask">
+          To respond to what communities need.
+        </p>
+      </div>
+      <div>
+        <p class="eyebrow" data-reveal="up">Vision</p>
+        <p class="mission-block" data-reveal="mask">
+          We envision communities that own their needs, answer them together, and believe in one another. That's the culture we're building and looking to inspire!
+        </p>
+      </div>
+    </div>
+
+    <blockquote class="mission-quote" data-reveal="up">
+      "We are all called to service the needs around us. Showing up is the first step."
+      <cite>— John &amp; Brittany Cominsky</cite>
+    </blockquote>
+
+    <p class="mission-note" data-reveal="up">
+      The Foundation is led by John and Brittany Cominsky — two Barberton natives entering their seventh year of marriage. John retired after a six-year NFL career. Your support keeps our initiatives running for the communities we serve.
+    </p>
+  </section>
+
+  <CtaBand
+    title="Believe in the mission?"
+    body="Your support keeps our initiatives running for the kids of Barberton and beyond."
+  />
+</PageLayout>
+
+<style>
+  .mission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  .eyebrow { margin-bottom: 16px; }
+  .mission-block {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 2.6vw, 30px);
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--c-ink);
+    margin: 0;
+  }
+  .mission-quote {
+    margin: 70px 0 0;
+    padding: 0 0 0 28px;
+    border-left: 4px solid var(--c-gold);
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1.45;
+    font-style: italic;
+    color: var(--c-ink);
+  }
+  .mission-quote cite {
+    display: block;
+    margin-top: 18px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--c-purple);
+  }
+  .mission-note {
+    max-width: 720px;
+    margin: 48px 0 0;
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--c-body);
+  }
+
+  @media (max-width: 760px) {
+    .mission-grid { grid-template-columns: 1fr; gap: 36px; }
+  }
+</style>

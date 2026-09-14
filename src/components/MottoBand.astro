@@ -1,0 +1,134 @@
+---
+import pushTheRock from "../assets/images/push-the-rock.jpg";
+import { links } from "../data/site";
+---
+
+<section class="motto">
+  <div class="motto__row" data-reveal-group="130">
+    <div class="motto__inner">
+      <p class="eyebrow eyebrow--gold" data-reveal="up">Our Motto</p>
+      <p class="motto__title" data-split="chars" data-split-step="46">Push the Rock</p>
+      <p class="motto__body" data-reveal="up">
+        Seek who you are and what you were made to do and bring that to those on your heart. Seek, Surrender, & Serve.
+      </p>
+      <p class="motto__closing" data-reveal="up" data-line>The rock is not the obstacle. It is the doorway to true potential.</p>
+    </div>
+    <div class="motto__side">
+      <div class="motto__side-content">
+        <p class="motto__side-text" data-reveal="up">
+          Serving our communities with consistency, action, and purpose.
+        </p>
+        <a href={links.donate} target="_blank" rel="noopener" class="btn btn--gold" data-reveal="up">Donate Now</a>
+      </div>
+      <figure class="motto__figure mo-zoom" data-reveal="media">
+        <img src={pushTheRock.src} alt="A silhouette pushing a large rock across a field at sunrise" class="img-cover" />
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .motto {
+    overflow: hidden;
+    background: var(--c-ink-900);
+    padding-block: var(--section-y-nine);
+  }
+  .motto__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 40px;
+    max-width: var(--container);
+    height: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .motto__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.75;
+  }
+  .motto__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: left;
+    color: var(--c-cream);
+  }
+  .motto__inner .eyebrow { margin-bottom: 18px; }
+  .motto__title {
+    font-family: var(--font-display);
+    font-size: clamp(54px, 8vw, 110px);
+    line-height: 1;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .motto__body {
+    max-width: 560px;
+    margin: 40px 0 0;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--c-soft);
+    max-width: 380px;
+  }
+  .motto__closing {
+    color: var(--c-soft);
+    max-width: 380px;
+    font-size: 16px;
+    margin: 40px 0 0;
+    /* The gold rule is drawn by [data-line] in the motion layer. */
+    padding-bottom: 8px;
+  }
+
+  .motto__side {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 20px;
+    /* padding: 40px 0; */
+  }
+  .motto__side-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 320px;
+  }
+  .motto__side-text {
+    max-width: 360px;
+    margin: 0;
+    text-align: left;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.4;
+    color: var(--c-gold);
+    font-family: var(--font-label);
+  }
+  .motto__figure {
+    width: 100%;
+    flex: 1;
+    margin: 0;
+    overflow: hidden;
+     margin: 20px 0 0;
+  }
+
+  @media (max-width: 860px) {
+    .motto { height: auto; }
+    .motto__row {
+      grid-template-columns: 1fr;
+      padding-block: 40px;
+    }
+    .motto__inner { align-items: center; text-align: center; }
+    .motto__side { align-items: center; }
+    .motto__side-content { align-items: center; }
+    .motto__side-text { text-align: center; }
+    .motto__figure { height: 260px; }
+  }
+</style>

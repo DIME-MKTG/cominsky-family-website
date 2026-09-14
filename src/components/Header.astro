@@ -1,0 +1,210 @@
+---
+import { navLinks, links } from "../data/site";
+
+// Normalize current path (strip trailing slash) for active-state matching.
+const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isActive = (match?: string) =>
+  match ? path === match || path.startsWith(match + "/") : false;
+---
+
+<header class="nav" transition:animate="none">
+  <a href="/" class="nav__brand" aria-label="Cominsky Family Foundation home">
+    <img
+      src="/brand/brandmark-purple.svg"
+      alt="Cominsky Family Foundation"
+      class="nav__logo"
+    />
+  </a>
+
+  <button
+    class="nav__toggle"
+    type="button"
+    aria-label="Toggle navigation menu"
+    aria-expanded="false"
+    aria-controls="nav-menu"
+  >
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav id="nav-menu" class="nav__menu" aria-label="Primary">
+    {navLinks.map((link) => (
+      <a
+        href={link.href}
+        class="nav__link"
+        aria-current={isActive(link.match) ? "page" : undefined}
+      >
+        {link.label}
+      </a>
+    ))}
+    <a
+      href={links.donate}
+      class="btn btn--primary nav__donate"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Donate
+    </a>
+  </nav>
+
+  <!-- Reading-progress hairline, driven by the motion engine. -->
+  <span class="mo-progress" aria-hidden="true"></span>
+</header>
+
+<style>
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px var(--gutter);
+    border-bottom: 1px solid var(--c-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--c-white);
+  }
+
+  .nav__brand {
+    display: flex;
+    align-items: center;
+    color: var(--c-ink);
+  }
+  .nav__logo {
+    height: 44px;
+    width: auto;
+    display: block;
+  }
+
+  .nav__menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .nav__link {
+    color: var(--c-ink);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    position: relative;
+  }
+  .nav__link:hover { color: var(--c-purple); }
+  .nav__link[aria-current="page"] { color: var(--c-purple); }
+  .nav__link[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 2px;
+    background: var(--c-gold);
+  }
+
+  /* Hamburger */
+  .nav__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .nav__toggle span {
+    display: block;
+    height: 2px;
+    width: 24px;
+    margin-inline: auto;
+    background: var(--c-ink);
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+  .nav__toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav__toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav__toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  @media (max-width: 1040px) {
+    .nav__toggle { display: flex; }
+    .nav__menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      background: var(--c-white);
+      border-bottom: 1px solid var(--c-border);
+      box-shadow: 0 12px 24px rgba(31, 29, 30, 0.08);
+      padding: 8px 0;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.28s ease;
+      z-index: 40;
+    }
+    .nav__menu.is-open { clip-path: inset(0 0 0 0); }
+    .nav__link {
+      padding: 15px var(--gutter);
+      font-size: 15px;
+    }
+    .nav__link[aria-current="page"]::after { display: none; }
+    .nav__link[aria-current="page"] {
+      box-shadow: inset 3px 0 0 var(--c-gold);
+    }
+    .nav__donate {
+      margin: 12px var(--gutter);
+      text-align: center;
+      padding-block: 14px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .nav__logo { height: 36px; }
+  }
+</style>
+
+<script>
+  /**
+   * Bound once; re-initialised on every view-transition navigation, since
+   * module scripts themselves only execute on the first page load.
+   */
+  let escapeBound = false;
+
+  function initNav() {
+    const toggle = document.querySelector<HTMLButtonElement>(".nav__toggle");
+    const menu = document.querySelector<HTMLElement>("#nav-menu");
+    if (!toggle || !menu || toggle.dataset.bound) return;
+    toggle.dataset.bound = "true";
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      menu.classList.toggle("is-open", open);
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    menu.querySelectorAll("a").forEach((link) =>
+      link.addEventListener("click", () => setOpen(false))
+    );
+
+    if (!escapeBound) {
+      escapeBound = true;
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        document
+          .querySelector<HTMLButtonElement>(".nav__toggle")
+          ?.setAttribute("aria-expanded", "false");
+        document.querySelector("#nav-menu")?.classList.remove("is-open");
+      });
+    }
+  }
+
+  initNav();
+  document.addEventListener("astro:page-load", initNav);
+</script>

@@ -1,0 +1,100 @@
+---
+import type { Initiative } from "../data/site";
+
+interface Props {
+  initiative: Initiative;
+}
+
+const { initiative } = Astro.props;
+---
+
+<article class="row" data-reveal-group="80">
+  <div class="row__num" data-reveal="fade">{initiative.number}</div>
+  <h3 class="row__title" data-reveal="mask">{initiative.title}</h3>
+  <p class="row__body" data-reveal="up">{initiative.body}</p>
+  <div class="row__media mo-zoom" data-reveal="media">
+    <img
+      src={initiative.image}
+      alt={initiative.alt}
+      class="img-cover"
+      style={initiative.objectPosition ? `object-position: ${initiative.objectPosition}` : undefined}
+      loading="lazy"
+    />
+  </div>
+</article>
+
+<style>
+  .row {
+    transition: background-color 500ms var(--mo-ease);
+    display: grid;
+    grid-template-columns: 90px 1fr 1.1fr 300px;
+    gap: 36px;
+    align-items: center;
+    padding: 34px 0;
+    border-bottom: 1px solid var(--c-border);
+    margin: 0;
+  }
+  .row__num {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--c-faint);
+    transition: color 400ms var(--mo-ease), transform 500ms var(--mo-ease);
+  }
+  .row:hover .row__num {
+    color: var(--c-purple);
+    transform: translateX(4px);
+  }
+  .row__title { transition: color 400ms var(--mo-ease); }
+  .row:hover .row__title { color: var(--c-purple); }
+  .row:hover .row__media img { transform: scale(1.05); }
+  .row__title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }
+  .row__body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--c-muted);
+    margin: 0;
+  }
+  .row__media {
+    height: 170px;
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+
+  @media (max-width: 960px) {
+    .row {
+      grid-template-columns: 64px 1fr;
+      grid-template-areas:
+        "num title"
+        "num body"
+        "media media";
+      gap: 8px 24px;
+      align-items: start;
+    }
+    .row__num { grid-area: num; }
+    .row__title { grid-area: title; }
+    .row__body { grid-area: body; margin-top: 6px; }
+    .row__media {
+      grid-area: media;
+      height: 220px;
+      margin-top: 20px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "num"
+        "title"
+        "body"
+        "media";
+    }
+  }
+</style>

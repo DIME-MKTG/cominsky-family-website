@@ -1,0 +1,134 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { r4fOptions, r4fGoal } from "../data/site";
+---
+
+<PageLayout
+  title="JC's R4F — Run for Funds — Cominsky Family Foundation"
+  description={`Help John reach ${r4fGoal}! JC's Run for Funds — sponsor a flat amount, put your business on the race-day shirt, or give $1 per training mile.`}
+>
+  <PageHero
+    eyebrow="JC's Run for Funds"
+    title={`Help us reach ${r4fGoal}`}
+    intro="Spread the word and help us grow our outreach. John is lacing up and running the miles — here's how you can back him."
+  />
+
+  <section class="container section">
+    <div class="r4f-grid" data-reveal-group="130">
+      {r4fOptions.map((opt, i) => (
+        <article class="r4f-card mo-lift mo-zoom" data-reveal="up">
+          <img
+            class="r4f-card__image"
+            src={opt.image}
+            alt={opt.imageAlt}
+            width={opt.imageWidth}
+            height={opt.imageHeight}
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="r4f-card__body">
+            <div class="r4f-card__num">{String(i + 1).padStart(2, "0")}</div>
+            <h2 class="r4f-card__title">{opt.title}</h2>
+            <p class="r4f-card__detail">{opt.detail}</p>
+            <a href="/r4f-donation-form" class="r4f-card__cta">
+              Click here to give <span class="mo-arrow">→</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="r4f-band">
+    <div class="container container--narrow r4f-band__inner" data-reveal-group="130">
+      <p class="eyebrow eyebrow--gold" data-reveal="up">The Goal</p>
+      <p class="r4f-band__title" data-split="words" data-split-step="60">Every mile, every dollar, moves the youth of Barberton forward.</p>
+      <a href="/r4f-donation-form" class="btn btn--gold btn--lg" data-reveal="up">Give to JC's R4F</a>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .r4f-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .r4f-card {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .r4f-card__image {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+  .r4f-card:hover .r4f-card__image { transform: scale(1.05); }
+  .r4f-card__num { transition: color 400ms var(--mo-ease); }
+  .r4f-card:hover .r4f-card__num { color: var(--c-purple); }
+  .r4f-card__body {
+    padding: 34px 30px 30px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+  .r4f-card__num {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--c-faint);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .r4f-card__title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+    margin: 0 0 14px;
+    font-weight: 500;
+  }
+  .r4f-card__detail {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--c-body);
+    margin: 0 0 24px;
+  }
+  .r4f-card__cta {
+    margin-top: auto;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--c-purple);
+    font-family: var(--font-label);
+  }
+
+  .r4f-band {
+    background: var(--c-purple);
+    color: var(--c-cream);
+  }
+  .r4f-band__inner {
+    padding-block: 80px;
+    text-align: center;
+  }
+  .r4f-band__inner .eyebrow { margin-bottom: 16px; }
+  .r4f-band__title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.6vw, 44px);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    margin: 0 auto 30px;
+    max-width: 700px;
+  }
+
+  @media (max-width: 860px) {
+    .r4f-grid { grid-template-columns: 1fr; }
+  }
+</style>

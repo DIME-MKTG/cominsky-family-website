@@ -1,0 +1,113 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { links } from "../data/site";
+---
+
+<PageLayout
+  title="Backpack Blessings — Cominsky Family Foundation"
+  description="Backpack Blessings sends kids home with non-perishable food for the weekend, so hunger never gets in the way of a childhood."
+>
+  <PageHero
+    eyebrow="Our Initiative"
+    title="Blessings in a Backpack"
+    intro="No child should go hungry over the weekend. We're making sure they don't."
+  />
+
+  <section class="container section container--mid">
+    <div class="bb" data-reveal-group="120">
+      <figure class="bb__media mo-zoom" data-reveal="media">
+        <img
+          src="/photos/initiatives/backpack.jpg"
+          alt="Packing food for Backpack Blessings"
+          class="img-cover"
+          style="object-position: 50% 30%"
+          loading="lazy"
+        />
+      </figure>
+      <div class="bb__copy">
+        <p class="bb__lead" data-split="words" data-split-step="60">
+          We want to impact kids across our community in every way we can. One of the most immediate needs we see is children going hungry over the weekends.
+        </p>
+        <p class="bb__body" data-reveal="up">
+          In partnership with Blessings in a Backpack, we have brought this weekend meal program to Barberton schools. Kids in need are sent home, quietly, with a bag of non-perishable food to carry them through the weekend
+        </p>
+        <p class="bb__body" data-reveal="up">
+          We've seen real impact already, but we can't do this alone —
+          <strong>we need your help.</strong> Contributions keep the backpacks
+          full, and we welcome suggestions for schools that could benefit from the
+          program.
+        </p>
+        <div class="bb__actions" data-reveal="up">
+          <a href={links.donate} class="btn btn--primary btn--lg" target="_blank" rel="noopener noreferrer">
+            Fund a Backpack
+          </a>
+          <a href="/contact-us" class="btn-ghost">Suggest a school <span class="mo-arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Right Now"
+    title="Help us keep the backpacks full"
+    body="Every backpack is funded by people like you. A little goes a long way for a kid in our community."
+    ctaLabel="Support Backpack Blessings"
+    containerVariant="mid"
+  />
+</PageLayout>
+
+<style>
+  .bb {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .bb__media {
+    height: 500px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin: 0;
+  }
+  .bb__lead {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 2.8vw, 32px);
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--c-ink);
+    margin: 0 0 24px;
+  }
+  .bb__body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--c-body);
+    margin: 0 0 16px;
+  }
+  .bb__actions {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .btn-ghost {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--c-gold);
+    padding-bottom: 3px;
+    color: var(--c-ink);
+    font-family: var(--font-label);
+  }
+  .btn-ghost:hover { color: var(--c-purple); }
+
+  @media (max-width: 860px) {
+    .bb { grid-template-columns: 1fr; gap: 32px; }
+    .bb__media { height: 62vw; max-height: 460px; }
+    .bb__actions { justify-content: center; }
+  }
+</style>

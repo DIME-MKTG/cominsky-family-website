@@ -1,0 +1,84 @@
+---
+---
+
+<section id="family" class="family">
+  <div class="family__inner container" data-reveal-group="130">
+    <figure class="family__media mo-zoom" data-reveal="media">
+      <img
+        src="/photos/family/portrait.jpg"
+        alt="The Cominsky family"
+        loading="lazy"
+      />
+    </figure>
+    <div class="family__copy">
+      <p class="eyebrow" data-reveal="up">The Family</p>
+      <h2 class="section-title family__title" data-split="words" data-split-step="70">The Cominsky's</h2>
+      <p class="family__body" data-reveal="up">
+        The Cominsky Family Foundation is a 501(c)(3) non-profit run by John and
+        Brittany Cominsky — two Barberton, Ohio natives now rolling into their
+        7th year of marriage. John just finished his 6th season in the NFL.
+      </p>
+      <blockquote class="family__quote" data-reveal="up">
+        "This is home. Everything we build goes back to the town that raised us."
+      </blockquote>
+      <p class="family__attr" data-reveal="up">— John + Brittany</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .family {
+    background: var(--c-cream);
+    border-block: 1px solid var(--c-border);
+  }
+  .family__inner {
+    padding-block: var(--section-y);
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 70px;
+    align-items: center;
+  }
+  .family__media {
+    max-height: 512px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin: 0;
+  }
+  .family__media img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .family__title { margin: 0 0 22px; font-weight: 500; }
+  .family__copy .eyebrow { margin-bottom: 14px; }
+  .family__body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--c-body);
+    margin: 0 0 20px;
+  }
+  .family__quote {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--c-ink);
+    border-left: 3px solid var(--c-gold);
+    padding-left: 20px;
+    margin: 0 0 20px;
+    font-style: italic;
+  }
+  .family__attr {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--c-purple);
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .family__inner {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+  }
+</style>

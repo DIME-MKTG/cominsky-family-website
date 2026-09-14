@@ -1,0 +1,156 @@
+---
+import { site } from "../data/site";
+---
+
+<section class="hero" id="top">
+  <h1 class="hero__wordmark" data-split="chars" data-split-step="52">Cominsky</h1>
+
+  <div class="hero__meta">
+    <p class="hero__tag" data-reveal="up" data-delay="420">
+      Family Foundation<br />
+      <span>{site.location} · {site.status}</span>
+    </p>
+    <p class="hero__motto" data-reveal="up" data-delay="520">Anchored · Aligned · Activated</p>
+    <div class="hero__intro" data-reveal="up" data-delay="620">
+      <p>
+        We help communities and individuals anchor to their identity and align with their purpose, so that they activate their true potential.
+      </p>
+      <a href="#mission" class="hero__cta">Our Mission <span class="mo-arrow mo-arrow--down">↓</span></a>
+    </div>
+  </div>
+
+  <figure class="hero__figure" data-reveal="curtain" data-delay="320">
+    <img
+      src="/photos/hero/family.jpeg"
+      alt="John, Brittany and the Cominsky kids in front of the Foundation backdrop"
+      class="img-cover"
+      data-parallax="26"
+    />
+  </figure>
+
+  <div class="hero__caption" data-reveal="fade" data-delay="1000">
+    <span>John &amp; Brittany Cominsky, with the next generation</span>
+    <span>Est. {site.location.split(",")[0]}, OH</span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    /* max-width: var(--container);
+    margin-inline: auto; */
+    padding: 72px var(--gutter) 0;
+  }
+
+  .hero__wordmark {
+    font-family: var(--font-display);
+    font-size: clamp(90px, 14.5vw, 230px);
+    font-weight: 500;
+    line-height: 0.92;
+    letter-spacing: 2px;
+    color: var(--c-ink);
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .hero__meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    align-items: end;
+    margin-top: 34px;
+    padding-bottom: 34px;
+  }
+
+  .hero__tag {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--c-purple);
+    margin: 0;
+    font-family: var(--font-label);
+  }
+  .hero__tag span {
+    color: var(--c-stone);
+    letter-spacing: 2px;
+  }
+
+  .hero__motto {
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--c-ink);
+    margin: 0;
+  }
+
+  .hero__intro {
+    justify-self: end;
+    max-width: 320px;
+    text-align: right;
+  }
+  .hero__intro p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--c-body);
+    margin: 0 0 14px;
+  }
+  .hero__cta {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--c-gold);
+    padding-bottom: 3px;
+    color: var(--c-ink);
+    font-family: var(--font-label);
+  }
+  .hero__cta:hover { color: var(--c-purple); }
+
+  .hero__figure {
+    height: 620px;
+    overflow: hidden;
+    margin: 0;
+    /* Extra scale gives the parallax drift room inside the crop. */
+    --mo-pscale: 1.16;
+  }
+
+  .hero__caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 14px;
+    font-size: 12px;
+    color: var(--c-stone);
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 900px) {
+    .hero__meta {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      text-align: left;
+    }
+    .hero__motto { text-align: left; }
+    .hero__intro {
+      justify-self: start;
+      text-align: left;
+      max-width: none;
+    }
+    .hero__figure { height: 60vw; max-height: 620px; }
+  }
+
+  @media (max-width: 560px) {
+    .hero { padding-top: 40px; }
+    .hero__wordmark {
+      font-size: clamp(48px, 16vw, 90px);
+      letter-spacing: 1px;
+    }
+    .hero__figure { height: 72vw; }
+    .hero__caption { flex-direction: column; gap: 4px; }
+  }
+</style>

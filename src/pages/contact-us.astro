@@ -1,0 +1,61 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import Contact from "../components/Contact.astro";
+import { site, links } from "../data/site";
+---
+
+<PageLayout
+  title="Contact Us — Cominsky Family Foundation"
+  description="Get in touch with the Cominsky Family Foundation in Barberton, Ohio."
+>
+  <PageHero
+    eyebrow="Contact Us"
+    title="Let's talk"
+    intro="Fund a delivery, sponsor an event, suggest a school, or just say hello — we'd love to hear from you."
+  />
+
+  <Contact
+    heading={false}
+    body="Whether you want to fund a Backpack Blessings delivery or become a sponsor of the Foundation itself, we welcome your support."
+    containerVariant="narrow"
+  />
+
+  <section class="container container--narrow reach" data-reveal-group="110">
+    <div class="reach__item" data-reveal="up">
+      <p class="eyebrow">Email</p>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+    <div class="reach__item" data-reveal="up">
+      <p class="eyebrow">Where</p>
+      <span>{site.location}</span>
+    </div>
+    <div class="reach__item" data-reveal="up">
+      <p class="eyebrow">Follow</p>
+      <span class="reach__social">
+        <a href={links.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href={links.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+      </span>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .reach {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding-bottom: var(--section-y);
+  }
+  .reach__item .eyebrow { margin-bottom: 10px; }
+  .reach__item a,
+  .reach__item span { font-size: 16px; font-weight: 600; color: var(--c-ink); font-family: var(--font-label);}
+  .reach__item a:hover { color: var(--c-purple); }
+  .reach__social { display: flex; gap: 18px; }
+
+  @media (max-width: 620px) {
+    .reach { grid-template-columns: 1fr; gap: 20px; }
+    .reach__item { text-align: center; }
+    .reach__social { justify-content: center; }
+  }
+</style>

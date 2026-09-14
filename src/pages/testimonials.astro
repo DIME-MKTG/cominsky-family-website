@@ -1,0 +1,79 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { testimonials } from "../data/site";
+---
+
+<PageLayout
+  title="Testimonials — Cominsky Family Foundation"
+  description="What people are saying about the Cominsky Family Foundation."
+>
+  <PageHero
+    eyebrow="Kind Words"
+    title="What people are saying"
+    intro="From the Barberton community and beyond."
+  />
+
+  <section class="container section">
+    <div class="tgrid" data-reveal-group="90">
+      {testimonials.map((t) => (
+        <figure class="tcard mo-lift" data-reveal="up">
+          <div class="tcard__mark" aria-hidden="true">&ldquo;</div>
+          <blockquote class="tcard__quote">{t.quote}</blockquote>
+          <figcaption class="tcard__cite">
+            {t.name}{t.location ? ` · ${t.location}` : ""}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Add Your Voice"
+    title="Been touched by our work?"
+    body="We'd love to hear your story — and your support helps us reach even more kids."
+    ctaLabel="Share your story"
+    ctaHref="/contact-us"
+    ctaExternal={false}
+  />
+</PageLayout>
+
+<style>
+  .tgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .tcard {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 34px 32px 30px;
+    margin: 0;
+    background: var(--c-white);
+  }
+  .tcard__mark {
+    font-family: var(--font-display);
+    font-size: 44px;
+    color: var(--c-gold);
+    line-height: 0.5;
+    margin-bottom: 20px;
+    transition: transform 600ms var(--mo-ease);
+    transform-origin: left center;
+  }
+  .tcard:hover .tcard__mark { transform: scale(1.12); }
+  .tcard__quote {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--c-ink);
+    font-style: italic;
+    margin: 0 0 20px;
+  }
+  .tcard__cite {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--c-stone);
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+import { links } from "../data/site";
+
+type ContainerVariant = "default" | "mid" | "narrow" | "tight";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  ctaExternal?: boolean;
+  containerVariant?: ContainerVariant;
+}
+
+const {
+  eyebrow = "Get Involved",
+  title,
+  body,
+  ctaLabel = "Donate Now",
+  ctaHref = links.donate,
+  ctaExternal = true,
+  containerVariant = "narrow",
+} = Astro.props;
+
+const containerVariantClass =
+  containerVariant === "default" ? undefined : `container--${containerVariant}`;
+---
+
+<section class="cta">
+  <div class:list={["cta__inner", "container", containerVariantClass]} data-reveal-group="120">
+    <div>
+      <p class="eyebrow eyebrow--gold" data-reveal="up">{eyebrow}</p>
+      <p class="cta__title" data-split="words" data-split-step="65" set:html={title} />
+      {body && <p class="cta__body" data-reveal="up">{body}</p>}
+    </div>
+    <a
+      href={ctaHref}
+      class="btn btn--gold btn--lg cta__btn"
+      data-reveal="up"
+      {...(ctaExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {ctaLabel}
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--c-purple);
+    color: var(--c-cream);
+  }
+  .cta__inner {
+    padding-block: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .cta__title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.4vw, 42px);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+    margin: 12px 0 0;
+    max-width: 760px;
+  }
+  .cta__body {
+    margin: 16px 0 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--c-lavender);
+    max-width: 560px;
+  }
+  .cta__btn { flex-shrink: 0; }
+
+  @media (max-width: 760px) {
+    .cta__inner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-block: 56px;
+      gap: 28px;
+    }
+    .cta__btn { align-self: center; }
+  }
+</style>

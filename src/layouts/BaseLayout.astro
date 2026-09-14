@@ -1,0 +1,57 @@
+---
+import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
+import Motion from "../components/Motion.astro";
+import "../styles/global.css";
+import "../styles/motion.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Cominsky Family Foundation — Barberton, Ohio",
+  description = "A 501(c)(3) non-profit run by John & Brittany Cominsky, serving the youth of Barberton, Ohio. Push the rock with us.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!--
+      Flags that scripting is available, before first paint. The motion layer
+      only hides content for reveals under `html.js`, so a no-JS visitor gets
+      the fully rendered page instead of a blank one.
+    -->
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+
+    <!-- Fonts -->
+    <Font cssVariable="--font-varsity-impact" />
+    <Font cssVariable="--font-aktiv-grotesk" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+    <Motion />
+    <script async src="https://widget.trackelio.com/v1/widget.js" data-project-key="0921071e-5d5f-4588-8326-5237ad8ebc86"></script>
+  </body>
+</html>

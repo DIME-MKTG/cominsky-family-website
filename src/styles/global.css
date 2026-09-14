@@ -1,0 +1,178 @@
+/* =========================================================
+   Cominsky Family Foundation — Global styles & design tokens
+   ========================================================= */
+
+:root {
+  /* Brand palette */
+  --c-purple: #4B006E;
+  --c-purple-hover: #6a1c96;
+  --c-gold: #FFB81C;
+
+  /* Neutrals / ink */
+  --c-ink: #2D2B2C;      /* primary text */
+  --c-ink-900: #1F1D1E;  /* dark backgrounds */
+  --c-body: #4A4744;     /* long-form body copy */
+  --c-muted: #6B6864;    /* secondary copy */
+  --c-stone: #8D8983;    /* captions / meta */
+  --c-faint: #C9C6C0;    /* hairlines, big index numbers */
+  --c-soft: #D7D4CF;     /* soft text on dark backgrounds */
+  --c-line: #C9C6C0;     /* input borders */
+  --c-border: #E9E7E2;   /* section dividers */
+  --c-cream: #F5F6F9;    /* off-white panels / light-on-dark text */
+  --c-lavender: #E9DFF0; /* light copy on purple */
+  --c-white: #FFFFFF;
+
+  /* Typography */
+  --font-display: var(--font-varsity-impact);
+  --font-body: var(--font-aktiv-grotesk);
+  --font-label: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Layout */
+  --container: 1400px;
+  --container-mid: 1240px;
+  --container-narrow: 1060px;
+  --container-tight: 800px;
+  --gutter: 56px;
+  --radius: 4px;
+
+  /* Section rhythm */
+  --section-y: 120px;
+  --section-y-nine: 90px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* Offset anchor jumps so section tops clear the sticky header */
+  scroll-padding-top: 96px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--c-white);
+  color: var(--c-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img { max-width: 100%; }
+
+a {
+  color: var(--c-purple);
+  text-decoration: none;
+}
+a:hover { color: var(--c-purple-hover); }
+
+input,
+textarea,
+button { font-family: var(--font-body); }
+
+/* ---------- Layout helpers ---------- */
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--mid { max-width: var(--container-mid); }
+.container--narrow { max-width: var(--container-narrow); }
+.container--tight { max-width: var(--container-tight); }
+
+.section { padding-block: var(--section-y); }
+
+/* ---------- Typographic primitives ---------- */
+.eyebrow {
+  font-family: var(--font-label);
+  font-size: 14px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: var(--c-purple);
+  text-transform: uppercase;
+  margin: 0;
+}
+.eyebrow--gold { color: var(--c-gold); }
+
+label,
+legend {
+  font-family: var(--font-label);
+}
+
+.display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.lead {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--c-body);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.btn:hover { filter: brightness(0.95); }
+.btn--primary {
+  background: var(--c-purple);
+  color: var(--c-cream);
+  padding: 11px 26px;
+  font-size: 13px;
+}
+.btn--primary:hover { color: var(--c-cream); }
+.btn--gold {
+  background: var(--c-gold);
+  color: var(--c-ink);
+  padding: 15px 34px;
+  font-size: 14px;
+}
+.btn--gold:hover { color: var(--c-ink); }
+.btn--lg { padding: 16px 42px; font-size: 15px; }
+
+/* ---------- Utility ---------- */
+.img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  display: block;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+/* Responsive rhythm */
+@media (max-width: 760px) {
+  :root {
+    --gutter: 24px;
+    --section-y: 72px;
+  }
+
+  .img-cover {
+    object-position: center;
+  }
+}
