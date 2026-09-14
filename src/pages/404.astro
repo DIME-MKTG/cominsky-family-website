@@ -1,33 +1,45 @@
 ---
-import Base from "../layouts/Base.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 ---
 
-<Base title="Page not found">
-	<div class="not-found">
-		<h1>404</h1>
-		<p>The page you're looking for doesn't exist.</p>
-		<a href="/">Go back home</a>
-	</div>
-</Base>
+<PageLayout
+	title="Page Not Found — Cominsky Family Foundation"
+	description="The page you're looking for doesn't exist."
+>
+	<section class="not-found container container--narrow section">
+		<p class="eyebrow" data-reveal="up">404</p>
+		<h1 class="not-found__title" data-split="words" data-split-step="80">
+			Lost the trail?
+		</h1>
+		<p class="not-found__body" data-reveal="up">
+			The page you're looking for doesn't exist — it may have moved, or the
+			link's a step behind.
+		</p>
+		<a href="/" class="btn btn--gold btn--lg" data-reveal="up">Back to home</a>
+	</section>
+</PageLayout>
 
 <style>
 	.not-found {
 		text-align: center;
-		padding: var(--spacing-24) var(--spacing-6);
+		padding-block: 140px;
 	}
 
-	.not-found h1 {
-		font-size: var(--font-size-5xl);
-		margin-bottom: var(--spacing-2);
-		color: var(--color-border);
+	.not-found__title {
+		font-family: var(--font-display);
+		font-size: clamp(44px, 8vw, 96px);
+		line-height: 0.98;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--c-ink);
+		margin: 18px 0 0;
 	}
 
-	.not-found p {
-		color: var(--color-muted);
-		margin-bottom: var(--spacing-6);
-	}
-
-	.not-found a {
-		color: var(--color-text);
+	.not-found__body {
+		max-width: 480px;
+		margin: 26px auto 36px;
+		font-size: 17px;
+		line-height: 1.7;
+		color: var(--c-body);
 	}
 </style>

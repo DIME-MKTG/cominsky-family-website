@@ -25,6 +25,27 @@
 */
 
 :root {
+	/* Foundation design has no dark variant; without the removed light/dark
+	   toggle, light-dark() tokens would otherwise follow OS preference and
+	   clash with the fixed-light Header/Footer styling. */
+	color-scheme: light;
+	--font-body: var(--font-aktiv-grotesk);
+	--font-heading: var(--font-varsity-impact);
+
+	/* Map EmDash's color tokens onto the foundation's brand palette
+	   (src/styles/global.css) so blog pages match the rest of the site. */
+	--color-bg: var(--c-white);
+	--color-bg-subtle: var(--c-cream);
+	--color-text: var(--c-ink);
+	--color-text-secondary: var(--c-body);
+	--color-muted: var(--c-stone);
+	--color-border: var(--c-border);
+	--color-border-subtle: var(--c-border);
+	--color-surface: var(--c-cream);
+	--color-brand: var(--c-purple);
+	--color-brand-hover: var(--c-purple-hover);
+	--color-on-brand: var(--c-cream);
+	--color-brand-ring: color-mix(in srgb, var(--c-purple) 25%, transparent);
 }
 
 .nav-admin {

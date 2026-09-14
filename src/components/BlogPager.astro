@@ -1,0 +1,58 @@
+---
+interface Props {
+	currentPage: number;
+	hasPrev: boolean;
+	hasNext: boolean;
+}
+
+const { currentPage, hasPrev, hasNext } = Astro.props;
+
+const pageHref = (page: number) => (page === 1 ? "/blog" : `/blog/page/${page}`);
+---
+
+{
+	(hasPrev || hasNext) && (
+		<nav class="pager" aria-label="Blog pagination">
+			{hasPrev ? (
+				<a href={pageHref(currentPage - 1)} class="pager__link pager__link--prev">
+					<span class="mo-arrow mo-arrow--back">←</span> Newer posts
+				</a>
+			) : (
+				<span />
+			)}
+			{hasNext && (
+				<a href={pageHref(currentPage + 1)} class="pager__link pager__link--next">
+					Older posts <span class="mo-arrow">→</span>
+				</a>
+			)}
+		</nav>
+	)
+}
+
+<style>
+	.pager {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: var(--spacing-12);
+		padding-top: var(--spacing-8);
+		border-top: 1px solid var(--color-border-subtle);
+	}
+
+	.pager__link {
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		color: var(--color-brand);
+		font-family: var(--font-label);
+	}
+
+	.pager__link:hover {
+		color: var(--color-brand-hover);
+	}
+
+	.pager__link--next {
+		margin-inline-start: auto;
+	}
+</style>
