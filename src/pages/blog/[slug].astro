@@ -173,9 +173,7 @@ const publishDate =
 								<span class="meta-label">Tags</span>
 								<div class="meta-tags">
 									{tags.map((t) => (
-										<a href={`/blog/tag/${t.slug}`} class="meta-tag">
-											{t.label}
-										</a>
+										<span class="meta-tag">{t.label}</span>
 									))}
 								</div>
 							</div>

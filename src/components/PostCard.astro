@@ -60,9 +60,7 @@ const metaBits = [
 			tags && tags.length > 0 && (
 				<div class="pcard__tags">
 					{tags.slice(0, 2).map((tag) => (
-						<a href={`/blog/tag/${tag.slug}`} class="pcard__tag">
-							{tag.label}
-						</a>
+						<span class="pcard__tag">{tag.label}</span>
 					))}
 				</div>
 			)
